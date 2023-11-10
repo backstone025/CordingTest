@@ -1,10 +1,15 @@
-N, M = map(int, input().split())
-given_number = list(map(int, input().split()))
-sum = 0
+import sys
+input = sys.stdin.readline
 
-for _ in range(M):
-    i, j = map(int, input().split())
-    for x in range(i-1, j):
-        sum += given_number[x]
+n, m = map(int, input().split())
+arr = list(map(int, input().split()))
+prefix_sum = [0]
+temp = 0
 
-    print(sum)
+for i in arr:
+    temp += i
+    prefix_sum.append(temp)
+
+for i in range(m):
+    a, b = map(int, input().split())
+    print(prefix_sum[b] - prefix_sum[a-1])
