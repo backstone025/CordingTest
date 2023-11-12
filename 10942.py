@@ -1,35 +1,31 @@
-import math
+import sys
 
-N = int(input())  # 수열의 크기
-Hong_jun = list(map(int, input().split()))  # 홍준이가 제시한 자연수들
-M = int(input())
+input = sys.stdin.readline
 
-def Palindrome(S, E):
-    if (E - S) % 2 == 0:  # 수열이 홀수이면
-        mid_idx = ((E + S) // 2) - 1
-        if E == S:
-            return 1
-        else:
-            for i in range(1, (E - S + 1) // 2 + 1):
-                if Hong_jun[mid_idx - i] != Hong_jun[mid_idx + i]:
-                    return 0
-                else:
-                    return 1
+n = int(input())
+numbers = list(map(int, input().split()))
+m = int(input())
 
+# dp
+dp = [[0] * n for _ in range(n)]
 
-    elif (E - S) % 2 == 1:  # 수열이 짝수이면
-        mid_idx = ((E + S) / 2) - 1
-        for j in range(1, ((E-S+1) // 2) + 1):
-            if Hong_jun[math.floor(mid_idx - j)] != Hong_jun[math.floor(mid_idx + j)]:
-                return 0
-            else:
-                return 1
+for num_len in range(n):
+    for start in range(n - num_len):
+        end = start + num_len
 
-        return 1
+        # 시작점과 끝점이 같다면 글자수가 1개이므로 무조건 팰린드롬
+        if start == end:
+            dp[start][end] = 1
+        # 시작점의 글자와 끝점의 글자가 같다면
+        elif numbers[start] == numbers[end]:
+            # 두 글자짜리 문자열이라면 무조건 팰린드롬
+            if start + 1 == end:
+                dp[start][end] = 1
+            # 가운데 문자열이 팰린드롬이라면 팰린드롬
+            elif dp[start + 1][end - 1] == 1:
+                dp[start][end] = 1
 
-for i in range(M):
-    S, E = map(int, input().split())
-    print(Palindrome(S, E))
-
-
-
+# 정답출력하기
+for question in range(m):
+    s, e = map(int, input().split())
+    print(dp[s - 1][e - 1])
