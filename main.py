@@ -1,27 +1,16 @@
 """
-baekjoon 2738 항렬 덧셈
-https://www.acmicpc.net/problem/2738
+baekjoon 2566 최대값
+https://www.acmicpc.net/problem/2566
 """
+max = 0
+col, row = 1,1
 
-column, row = map(int, input().split())
-A = []
-B = []
-
-for i in range(column):
-    input_list = input().split()
-    l = []
-    for j in range(row):
-        l.append(int(input_list[j]))
-    A.append(l)
-for i in range(column):
-    input_list = input().split()
-    l = []
-    for j in range(row):
-        l.append(int(input_list[j]))
-    B.append(l)
-for i in range(column):
-    for j in range(row):
-        if(j != row - 1):
-            print(A[i][j] + B[i][j], end=" ")
-        else:
-            print(A[i][j] + B[i][j])
+for i in range(9):
+    list = input().split()
+    for j in range(9):
+        if (max < int(list[j])):
+            max = int(list[j])
+            col = i + 1
+            row = j + 1
+print(max)
+print(col,row)
