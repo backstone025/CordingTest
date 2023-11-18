@@ -1,27 +1,22 @@
 """
-baekjoon 2563 색종이
-https://www.acmicpc.net/problem/2563
+baekjoon 25305 커트라인
+https://www.acmicpc.net/problem/25305
 """
 
-paper = []
-for i in range(100):
-    l = []
-    for j in range(100):
-        l.append(0)
-    paper.append(l)
-
-def setMetrix(value, row, col):
-    for i in range(row, row + 10):
-        for j in range(col, col + 10):
-            paper[i][j] = value
-
-num = int(input())
-for i in range(num):
-    row, col = map(int, input().split())
-    setMetrix(1, row, col)
-
-s = 0
-for i in range(100):
-    for j in range(100):
-        s += paper[i][j]
-print(s)
+N, k = map(int, input().split())
+x = list(map(int, input().split()))
+winner = []
+for i in range(k):
+    winner.append(x[i])
+for i in range(k,N):
+    tmp = x[i]
+    for j in range(k):
+        if(tmp > winner[j]):
+            candidate = winner[j]
+            winner[j] = tmp
+            tmp = candidate
+result = winner[0]
+for i in range(1, k):
+    if(result>winner[i]):
+        result = winner[i]
+print(result)
