@@ -1,25 +1,17 @@
 """
-baekjoon 1427 소트인사이드
-https://www.acmicpc.net/problem/1427
+baekjoon 1181 단어 정렬
+https://www.acmicpc.net/problem/1181
 """
 import sys
 input = sys.stdin.readline
 
 N = int(input())
-Nlen = len(str(N))
-for i in range(9,-1,-1):
-    num = N
-    count = 1
-    while num != 0:
-        pn = num%10
-        num = int(num/10)
-        if pn == i:
-            print(pn,end="")
-            tmp = int(N / (10**count))
-            N %= 10**(count-1)
-            N = N + tmp * (10**(count-1))
-            count -= 1
-            Nlen -= 1
-        count += 1;
-for i in range(Nlen):
-    print(0,end="")
+words = [[-1,'null']]
+for i in range(N):
+    w = input()
+    words.append([len(w), w])
+words.sort()
+
+for i in range(1, N+1):
+    if words[i][1] != words[i-1][1]:
+        print(words[i][1], end="")
