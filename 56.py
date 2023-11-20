@@ -1,24 +1,15 @@
 class Solution:
     def merge(self, intervals):
+        intervals.sort(key=lambda x: x[0])
         result = []
-        intervals.sort()
-        index = 0
-        while index < len(intervals):
-            temp = []
-            start = intervals[index][0]
-            end = intervals[index][1]
-            j = index + 1
-            while j < len(intervals) and end >= intervals[j][0]:
-                end = max(intervals[j][1], end)
-                index = j
-                j += 1
-            temp.append(start)
-            temp.append(end)
-            result.append(temp)
-            index += 1
-
-        print(result)
+        for idx, itv in enumerate(intervals):
+            if idx == 0:
+                result.append(itv)
+            elif itv[0] <= result[-1][1]:
+                if itv[1] <= result[-1][1]:
+                    continue
+                else:
+                    result[-1][1] = itv[1]
+            else:
+                result.append(itv)
         return result
-
-a = Solution()
-a.merge([[1, 3], [2, 6], [8, 10], [15, 18]])
