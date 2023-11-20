@@ -5,13 +5,18 @@ https://www.acmicpc.net/problem/1181
 import sys
 input = sys.stdin.readline
 
-N = int(input())
-words = [[-1,'null']]
-for i in range(N):
-    w = input()
-    words.append([len(w), w])
-words.sort()
+def separate(s):
+    if(s.isdigit()):
+        return int(s)
+    else:
+        return s
 
-for i in range(1, N+1):
-    if words[i][1] != words[i-1][1]:
-        print(words[i][1], end="")
+N = int(input())
+member = []
+for i in range(N):
+    o,n = map(separate, input().split())
+    member.append([o,i,n])
+
+member.sort()
+for i in range(N):
+    print(member[i][0],member[i][2])
