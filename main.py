@@ -1,22 +1,20 @@
 """
-baekjoon 1181 단어 정렬
-https://www.acmicpc.net/problem/1181
+baekjoon 18870 좌표 압축
+https://www.acmicpc.net/problem/18870
+
+딕셔너리 사용 -> 인덱스 값 접근히여 문제 해결
 """
 import sys
+
 input = sys.stdin.readline
 
-def separate(s):
-    if(s.isdigit()):
-        return int(s)
-    else:
-        return s
-
 N = int(input())
-member = []
-for i in range(N):
-    o,n = map(separate, input().split())
-    member.append([o,i,n])
+X = list(map(int, input().split()))
 
-member.sort()
-for i in range(N):
-    print(member[i][0],member[i][2])
+sample = sorted(list(set(X.copy())))
+
+# dictionary comprehension
+result = {sample[i]: i for i in range(len(sample))}
+for i in range(N-1):
+    print(result[X[i]], end=" ")
+print(result[X[-1]], end="")
