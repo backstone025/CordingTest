@@ -1,14 +1,11 @@
-class Solution(object):
+class Solution():
     def largestNumber(self, nums):
-        for i in range(len(nums), 0, -1):
-            for j in range(0, i-1):
-                if not self.compare(nums[j], nums[j+1]):
-                    nums[j], nums[j+1] = nums[j+1], nums[j]
-        print(str(int("".join(map(str, nums)))))
+        for i in range(len(nums)):
+            for j in range(i-1, -1, -1):
+                if int(str(nums[j+1]) + str(nums[j])) > int(str(nums[j]) + str(nums[j+1])):
+                    nums[j+1], nums[j] = nums[j], nums[j+1]
+
         return str(int("".join(map(str, nums))))
 
-    def compare(self, n1, n2):
-        return str(n1) + str(n2) > str(n2) + str(n1)
-
 a = Solution()
-a.largestNumber([10, 2])
+a.largestNumber([3, 30, 34, 5, 9])
