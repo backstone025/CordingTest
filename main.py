@@ -1,49 +1,42 @@
 """
-baekjoon 1260 DFS와 BFS
-https://www.acmicpc.net/problem/1260
+baekjoon 2606 바이러스
+https://www.acmicpc.net/problem/2606
 
-반복문을 활용한 BFS를 사용했다.
-규모가 작고 최단 경로 찾을 땐 BFS를 사용해야 한다.
+연습할 겸 DFS를 이용해 구현했다.
 """
 import sys
-
 input = sys.stdin.readline
 from collections import deque
 
-
-def findNeighbor(n, m, pos):
-    r = [1, 0, -1, 0]
-    c = [0, 1, 0, -1]
-    ns = []
-    for i in range(4):
-        x = pos[1] + c[i]
-        y = pos[0] + r[i]
-        if 0 <= x <= m and 0 <= y <= n:
-            ns.append([y, x])
-    return ns
-
-
-def search(matrix, n, m):
-    pos = [0, 0, 1]
-    queue = deque([pos])
-    visited = [[0, 0]]
-    while queue:
-        pos = queue.popleft()
-        ns = findNeighbor(n, m, pos)
-        for v in ns:
-            if matrix[v[0]][v[1]] and (v not in visited):
-                visited.append(v.copy())
-                v.extend([pos[2] + 1])
-                if v[0] == n and v[1] == m:
-                    return v[2]
-                queue.append(v)
-    return -1
+def DFS(es):
+    visited = [1]
+    stack = [None, 1]
+    pos = 1
+    while stack and not pos is None:
+        for end in es[pos]:
+            if end not in visited:
+                es[pos].popleft()
+                visited.append(end)
+                stack.append(end)
+                pos = end
+                break
+        else:
+            stack.pop()
+            pos = stack[-1]
+    return len(visited)-1
 
 
-N, M = map(int, input().split())
-matrix = []
-for i in range(N):
-    line = [True if n == '1' else False for n in input()]
-    matrix.append(line)
+n_num = int(input())
+e_num = int(input())
 
-print(search(matrix, N - 1, M - 1))
+inputs = []
+for _ in range(e_num):
+    h, t = map(int, input().split())
+    inputs.append((h, t))
+    inputs.append((t, h))
+inputs.sort()
+edges = {i+1 : deque([]) for i in range(n_num)}
+for t in inputs:
+    edges[t[0]].append(t[1])
+
+print(DFS(edges))
