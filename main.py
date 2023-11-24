@@ -2,69 +2,48 @@
 baekjoon 1260 DFS와 BFS
 https://www.acmicpc.net/problem/1260
 
-list comprehension을 사용하여 코드를 줄이고자 했다.
+반복문을 활용한 BFS를 사용했다.
+규모가 작고 최단 경로 찾을 땐 BFS를 사용해야 한다.
 """
 import sys
-from collections import Counter
 
 input = sys.stdin.readline
+from collections import deque
 
-def BFS(n, s, ns):
-    stack = [s]
-    record = [s]
-    check_n = {i:True for i in range(1,n+1)}
-    check_n[s] = False
-    while stack:
-        n_pos = stack.pop(0)
-        e_list = ns[n_pos]
-        for j in range(len(e_list)):
-            if check_n[e_list[j]]:
-                stack.append(e_list[j])
-                record.append(e_list[j])
-                check_n[e_list[j]] = False
-        if Counter(check_n.values())[False] == n:
-            break
-    return record
 
-def DFS(n, s, ns):
-    n_pos = s
-    record = [s]
-    stack = [s]
-    check_n = {i:True for i in range(1,n+1)}
-    check_n[s] = False
-    while True:
-        e_list = ns[n_pos]
-        for j in range(len(e_list)):
-            if check_n[e_list[j]]:
-                stack.append(e_list[j])
-                record.append(e_list[j])
-                check_n[e_list[j]] = False
-                n_pos = e_list[j]
-                break
-        else:
-            stack.pop()
-            if len(stack) == 0:
-                break
-            n_pos = stack[-1]
-            continue
-        if Counter(check_n.values())[False] == n:
-            break
-    return record
+def findNeighbor(n, m, pos):
+    r = [1, 0, -1, 0]
+    c = [0, 1, 0, -1]
+    ns = []
+    for i in range(4):
+        x = pos[1] + c[i]
+        y = pos[0] + r[i]
+        if 0 <= x <= m and 0 <= y <= n:
+            ns.append([y, x])
+    return ns
 
-node, edge, start = map(int, input().split())
-nodes = {i:[] for i in range(1, node+1)}
-for i in range(edge):
-    a, b = list(map(int, input().split()))
-    nodes[a].append(b)
-    nodes[b].append(a)
-for k, v in nodes.items():
-    nodes[k] = sorted(v)
 
-DFS_list = DFS(node, start, nodes)
-for v in range(len(DFS_list)-1):
-    print(DFS_list[v], end=" ")
-print(DFS_list[-1])
-BFS_list = BFS(node, start, nodes)
-for v in range(len(BFS_list)-1):
-    print(BFS_list[v], end=" ")
-print(BFS_list[-1])
+def search(matrix, n, m):
+    pos = [0, 0, 1]
+    queue = deque([pos])
+    visited = [[0, 0]]
+    while queue:
+        pos = queue.popleft()
+        ns = findNeighbor(n, m, pos)
+        for v in ns:
+            if matrix[v[0]][v[1]] and (v not in visited):
+                visited.append(v.copy())
+                v.extend([pos[2] + 1])
+                if v[0] == n and v[1] == m:
+                    return v[2]
+                queue.append(v)
+    return -1
+
+
+N, M = map(int, input().split())
+matrix = []
+for i in range(N):
+    line = [True if n == '1' else False for n in input()]
+    matrix.append(line)
+
+print(search(matrix, N - 1, M - 1))
