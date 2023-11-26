@@ -1,11 +1,11 @@
 """
-baekjoon 2667 단지번호붙이기
-https://www.acmicpc.net/problem/2667
+baekjoon 1697 숨박꼭질
+https://www.acmicpc.net/problem/1697
 
-브루트 포스 -> 단지 탐색('1'인 곳 찾기){
-    BFS -> 단지 개수 세기{
-    }
-}
+방문 여부 확인할 땐 list말고 set을 쓰자.
+시간 에러가 여러번 발생했는데, 원인은 전부 방문 여부 확인하는데 시간이 걸려서였다.
+list[] : O(n) -> 순차적인 모든 요소 확인
+set{} : O(1) -> 해시 테이블로 구현되어 있어서
 """
 import sys
 
@@ -13,50 +13,25 @@ input = sys.stdin.readline
 from collections import deque
 
 
-def findNeighbor(pos, n):
-    x = [1, 0, -1, 0]
-    y = [0, 1, 0, -1]
-    ns = []
-    for i in range(4):
-        r, c = pos[0] + x[i], pos[1] + y[i]
-        if (c >= 0 and c < n) and (r >= 0 and r < n):
-            ns.append([r, c])
-    return ns
+def chaseTime(c, r):
+    pos = [c, 0]
+    queue = deque([pos])
+    visited = {c}
+    while queue:
+        if pos[0] == r:
+            break
+        pos = queue.popleft()
+        pos[1] += 1
+        next = [pos[0] + 1, pos[0] * 2, pos[0] - 1]
+        for n in next:
+            if n >= 0 and n <= 100000 and n not in visited:
+                queue.append([n, pos[1]])
+                visited.add(n)
+                if n == r:
+                    pos = [n, pos[1]]
+                    break
+    return pos[1]
 
 
-def search(m, n):
-    Visited = ([])
-    result = []
-    for r in range(n):
-        for c in range(n):
-            pos = [r, c]
-            if pos not in Visited and m[pos[0]][pos[1]]:
-                count = 1
-                queue = deque([pos])
-                Visited.append(pos)
-                while queue:
-                    pos = queue.popleft()
-                    m[pos[0]][pos[1]] = False
-                    for b in findNeighbor(pos, n):
-                        if m[b[0]][b[1]]:
-                            count += 1
-                            queue.append(b)
-                            Visited.append(b)
-                            m[b[0]][b[1]] = False
-                result.append(count)
-            else:
-                Visited.append(pos)
-
-    return sorted(result)
-
-
-N = int(input())
-metrix = []
-for i in range(N):
-    r = [True if i == '1' else False for i in input()]
-    metrix.append(r)
-
-builds = search(metrix, N)
-print(len(builds))
-for i in builds:
-    print(i)
+c, r = map(int, input().split())
+print(chaseTime(c, r))
