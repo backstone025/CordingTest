@@ -1,18 +1,15 @@
 import sys
+from collections import deque
 input = sys.stdin.readline
 
 N, L = map(int, input().split())
 num = list(map(int, input().split()))
+D  = deque()
 
-num_idx = 0
-D = []
-
-for i in range(1, N+1):  #  1부터 N+1까지
-    if i-L+1 >= 1:
-        D.append(num[i-L : i])
-    elif i-L+1 < 1:
-        D.append(num[0 : i])
-
-for i in range(len(D)):
-    print(min(D[i]), end=" ")
-
+for i in range(N):
+    while D and D[-1][0] > num[i]:
+        D.pop()
+    D.append((num[i], i))
+    if D[0][1] <= i - L:
+        D.popleft()
+    print(D[0][0], end=" ")
