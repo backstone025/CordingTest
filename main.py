@@ -1,36 +1,35 @@
 """
-baekjoon 11724 연결 요소의 개수
-https://www.acmicpc.net/problem/11724
-
-맨 처음 값을 넣어줄 경우를 따지지 않아 문제가 발생했다.
-맨 처음 queue값 넣을 때 node의 개수가 충분한지(pop()에러 방지)
-만약 그렇다면 넣는 동시에 nodes에서 빼주기
+baekjoon 1463 1로 만들기
+https://www.acmicpc.net/problem/1463
+-> 20분 소요
 """
 
 import sys
 input = sys.stdin.readline
-
 from collections import deque
 
-N, M = map(int, input().split())
-nodes = {i for i in range(1, N+1)}
-edges = {i : [] for i in range(1, N+1)}
-for i in range(M):
-    u, v = map(int, input().split())
-    edges[u].append(v)
-    edges[v].append(u)
+def BFS(N):
+    queue = deque([[N, 0]])
+    visited = {N}
+    count = 0
+    while queue:
+        tmp = queue.popleft()
+        count = tmp[1] + 1
+        num = tmp[0]
+        move = []
+        if(num % 3 == 0 and int(num / 3) > 0):
+            move.append(int(num/3))
+        if(num % 2 == 0 and int(num / 2) > 0):
+            move.append(int(num/2))
+        if(num - 1 > 0):
+            move.append(int(num-1))
+        for v in move:
+            if v not in visited:
+                queue.append([v, count])
+                visited.add(v)
+            if v == 1:
+                return count
 
-queue = deque([])
-if len(nodes) >= 1:
-    queue.append(nodes.pop())
-count = 1
-while nodes:
-    n = queue.popleft()
-    for k in edges[n]:
-        if k in nodes:
-            nodes.remove(k)
-            queue.append(k)
-    if len(queue) == 0:
-        count += 1
-        queue.append(nodes.pop())
-print(count)
+
+N = int(input())
+print(BFS(N))
